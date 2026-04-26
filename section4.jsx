@@ -100,16 +100,6 @@ const CompTotal = ({ label, value, sev }) => {
    07 · ACTIONS
    ============================================================ */
 
-const ACTIONS = [
-  { p: 1, cat: "Medical",     time: "This week",         text: "Book endocrinologist. Re-test TSH, FT3, FT4, total + free testosterone, SHBG, LH, FSH. Discuss Thyronorm titration to target TSH 1.0–2.0.", ref: "Connection 01" },
-  { p: 2, cat: "Training",    time: "Next 7 days",       text: "Cap padel at 2 sessions, separated by ≥48h. No heavy lifting until endocrine work-up returns. Add one zone-2 walk (45 min).", ref: "Body Signal · Training" },
-  { p: 3, cat: "Sleep",       time: "Tonight",           text: "Phone out of the bedroom. Last meal before 20:30. Lights down by 22:00, asleep by 22:30. Hard rule for the next 14 nights.", ref: "Body Signal · Sleep" },
-  { p: 4, cat: "Nutrition",   time: "Next 14 days",      text: "Zero alcohol. No restaurant dinners after 21:00. Re-introduce protein at breakfast (target 35g) to flatten glucose volatility.", ref: "Connection 02" },
-  { p: 5, cat: "Supplements", time: "From tonight",      text: "Move magnesium to a fixed 21:30 bedside ritual. Do not depend on remembering. Set evening supplement station next to phone charger.", ref: "Connection 04" },
-  { p: 6, cat: "Bloodwork",   time: "In 6 weeks",        text: "Full lipid panel + ApoB + fasting insulin re-check after 6 weeks of sleep + alcohol changes. Compare ApoB to 132 baseline.", ref: "Connection 02" },
-  { p: 7, cat: "Tracking",    time: "Each morning",      text: "If HRV < 40 ms on waking — no padel that day. Replace with walk or full rest. Treat this as a hard rule, not a guideline.", ref: "Body Signal · Autonomic" },
-];
-
 const CAT_COLOR = {
   Medical:     "var(--red)",
   Training:    "var(--amber)",
@@ -121,6 +111,11 @@ const CAT_COLOR = {
 };
 
 const Actions = ({ data }) => {
+  const actions = data.actions;
+  if (actions == null || actions.length === 0) return null;
+
+  const sorted = [...actions].sort((a, b) => (a.priority ?? 99) - (b.priority ?? 99));
+
   return (
     <section id="actions" className="page" style={{ paddingTop: 24, paddingBottom: 80 }}>
       <SectionMarker n={9} label="Actions" />
@@ -132,34 +127,34 @@ const Actions = ({ data }) => {
           </h2>
         </div>
         <div className="col-span-12 lg:col-span-5 annot" style={{ borderLeft: "1px solid var(--line)", paddingLeft: 18 }}>
-          Ranked by leverage. Each item names the body signal or connection that drives it. If you can only do three this week — do 1, 2, and 3.
+          Ranked by priority. If you can only do three this week — do 1, 2, and 3.
         </div>
       </div>
 
       <div style={{ borderTop: "1px solid var(--line)" }}>
-        {ACTIONS.map((a) => (
-          <div key={a.p} className="grid grid-cols-12 gap-4 items-baseline" style={{ padding: "20px 0", borderBottom: "1px solid var(--line-soft)" }}>
-            <div className="col-span-12 md:col-span-1">
-              <span className="serif-tab" style={{ fontSize: 38, color: "var(--ink-3)", letterSpacing: "-0.02em" }}>0{a.p}</span>
-            </div>
-            <div className="col-span-12 md:col-span-7">
-              <div className="serif" style={{ fontSize: 19, lineHeight: 1.4, color: "var(--ink)", maxWidth: "60ch" }}>{a.text}</div>
-              <div className="mono" style={{ fontSize: 11, color: "var(--ink-4)", marginTop: 8, letterSpacing: "0.06em" }}>
-                drives ← {a.ref}
+        {sorted.map((a, i) => {
+          const num = String(a.priority ?? (i + 1)).padStart(2, "0");
+          return (
+            <div key={i} className="grid grid-cols-12 gap-4 items-baseline" style={{ padding: "20px 0", borderBottom: "1px solid var(--line-soft)" }}>
+              <div className="col-span-12 md:col-span-1">
+                <span className="serif-tab" style={{ fontSize: 38, color: "var(--ink-3)", letterSpacing: "-0.02em" }}>{num}</span>
+              </div>
+              <div className="col-span-12 md:col-span-7">
+                <div className="serif" style={{ fontSize: 19, lineHeight: 1.4, color: "var(--ink)", maxWidth: "60ch" }}>{a.text}</div>
+              </div>
+              <div className="col-span-6 md:col-span-2">
+                <Eyebrow>Category</Eyebrow>
+                <div className="mono" style={{ fontSize: 12, color: CAT_COLOR[a.category] || "var(--ink-2)", letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 3 }}>
+                  ● {a.category}
+                </div>
+              </div>
+              <div className="col-span-6 md:col-span-2">
+                <Eyebrow>Timeframe</Eyebrow>
+                <div className="serif" style={{ fontSize: 14, color: "var(--ink-2)", marginTop: 3 }}>{a.timeframe}</div>
               </div>
             </div>
-            <div className="col-span-6 md:col-span-2">
-              <Eyebrow>Category</Eyebrow>
-              <div className="mono" style={{ fontSize: 12, color: CAT_COLOR[a.cat], letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 3 }}>
-                ● {a.cat}
-              </div>
-            </div>
-            <div className="col-span-6 md:col-span-2">
-              <Eyebrow>Timeframe</Eyebrow>
-              <div className="serif" style={{ fontSize: 14, color: "var(--ink-2)", marginTop: 3 }}>{a.time}</div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

@@ -4,6 +4,58 @@ const {
   Sparkline, RecoveryDistribution, SleepStack, TrendBars,
 } = window.HRPrimitives;
 
+const VERDICT_EMPHASIS_WORDS = [
+  "compounding", "spiralling", "spiraling", "spiral",
+  "recovering", "rebounding", "stabilising", "stabilizing",
+  "declining", "deteriorating", "worsening", "improving",
+  "accelerating", "decelerating", "narrowing", "widening",
+  "collapsing", "expanding", "rising", "falling",
+  "depleted", "exhausted", "overtrained", "undertrained",
+  "elevated", "suppressed", "blunted", "amplified",
+  "deficit", "surplus", "imbalance", "dysregulation",
+  "inflammation", "catabolic", "anabolic",
+];
+
+const parseVerdict = (verdict) => {
+  if (!verdict || typeof verdict !== "string") {
+    return {
+      headline: "Analysis pending — insufficient data this week",
+      paragraphs: [],
+      empty: true,
+    };
+  }
+  const sentences = verdict.split(/(?<=[.!?])\s+/).map((s) => s.trim()).filter(Boolean);
+  const headline = sentences[0] || verdict;
+  const remaining = sentences.slice(1);
+  let paragraphs;
+  if (remaining.length <= 1) paragraphs = remaining;
+  else paragraphs = [remaining.slice(0, -1).join(" "), remaining[remaining.length - 1]];
+  return { headline, paragraphs, empty: false };
+};
+
+const emphasizeHeadline = (headline) => {
+  const wrap = (re) => {
+    const m = headline.match(re);
+    if (!m) return null;
+    const idx = m.index;
+    const matched = m[0];
+    return (
+      <>
+        {headline.slice(0, idx)}
+        <em style={{ color: "var(--gold)", fontStyle: "italic" }}>{matched}</em>
+        {headline.slice(idx + matched.length)}
+      </>
+    );
+  };
+  for (const word of VERDICT_EMPHASIS_WORDS) {
+    const out = wrap(new RegExp(`\\b${word}\\b`, "i"));
+    if (out) return out;
+  }
+  const fallback = wrap(/\b\w+(?:ing|ed)\b/i);
+  if (fallback) return fallback;
+  return headline;
+};
+
 /* ============================================================
    00 · HEADER
    ============================================================ */
@@ -53,6 +105,7 @@ const Header = ({ data, currentSection, onJump }) => {
 
 const Verdict = ({ data }) => {
   const d = data.derived;
+  const v = parseVerdict(data.verdict);
   return (
     <section id="verdict" className="page" style={{ paddingTop: 56, paddingBottom: 72 }}>
       {/* Masthead */}
@@ -68,7 +121,7 @@ const Verdict = ({ data }) => {
       {/* Title */}
       <div className="reveal" style={{ animationDelay: "80ms" }}>
         <h1 className="display-1 mb-6" style={{ maxWidth: "16ch" }}>
-          A recovery deficit, <em style={{ color: "var(--gold)", fontStyle: "italic" }}>compounding</em>.
+          {v.empty ? v.headline : emphasizeHeadline(v.headline)}
         </h1>
       </div>
 
@@ -78,17 +131,14 @@ const Verdict = ({ data }) => {
           <div className="serif" style={{ fontSize: 13, letterSpacing: "0.06em", color: "var(--ink-3)", textTransform: "uppercase", marginBottom: 18 }}>
             The Verdict
           </div>
-          <p className="pull">
-            Your body is in a <em>recovery-deficit spiral</em>. Four consecutive weeks of declining HRV, rising resting heart rate, and accumulated sleep debt — while sustaining four high-strain padel sessions a week — is unsustainable for your physiology. Your hormonal baseline (testosterone 205&#8239;ng/dL, TSH 6.65) means you are recovering from a smaller capacity than a healthy 42-year-old.
-          </p>
-          <p className="pull" style={{ marginTop: 20 }}>
-            Cut to two padel sessions next week, prioritise sleep before 11&#8239;PM, and book the endocrinologist this week.
-          </p>
+          {v.paragraphs.map((p, i) => (
+            <p key={i} className="pull" style={i > 0 ? { marginTop: 20 } : undefined}>{p}</p>
+          ))}
 
           <div className="flex items-center gap-3 mt-10">
             <div className="rule" style={{ flex: 1 }} />
-            <span className="serif" style={{ fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--ink-3)" }}>Severity · Amber-Red</span>
-            <Sev level="red" />
+            <span className="serif" style={{ fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--ink-3)" }}>{v.empty ? "Severity · Pending" : "Severity · Amber-Red"}</span>
+            <Sev level={v.empty ? "grey" : "red"} />
           </div>
         </div>
 
