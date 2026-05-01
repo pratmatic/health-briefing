@@ -7,6 +7,16 @@ const { SectionMarker, Eyebrow, Sev } = window.HRPrimitives;
 
 const Supplements = ({ data }) => {
   const dayLabels = data.days.map((d) => d.day);
+  // Sample build hardcoded "44/49" / "21/21" / "23/28" and "WEEK 90%" — derive
+  // them from the real supplements array + per-category totals supplied by
+  // starter.py.
+  const totals = (data.derived && data.derived.suppsTotalsByCategory) || null;
+  const ct = totals ? totals.critical : null;
+  const at = totals ? totals.adjunct  : null;
+  const ot = totals ? totals.overall  : null;
+  const overallPct = ot && ot.total ? Math.round((ot.taken / ot.total) * 100) : 0;
+  const sevFor = (b) => (b && b.total > 0 && b.taken === b.total) ? "green" :
+                        (b && b.total > 0 && b.taken / b.total >= 0.7) ? "amber" : "red";
   return (
     <section id="supplements" className="page" style={{ paddingTop: 24, paddingBottom: 64 }}>
       <SectionMarker n={5} label="Supplement Compliance" />
@@ -28,7 +38,8 @@ const Supplements = ({ data }) => {
               const taken = (day) => {
                 const dayData = data.days.find((dd) => dd.day === day);
                 if (!dayData) return false;
-                if (dayData.supps.taken === 7) return true;
+                const dayTotal = dayData.supps.total || 7;
+                if (dayData.supps.taken === dayTotal) return true;
                 if (dayData.supps.missed.includes("All")) return false;
                 return !dayData.supps.missed.some((m) => s.name.toLowerCase().includes(m.toLowerCase()));
               };
@@ -60,24 +71,45 @@ const Supplements = ({ data }) => {
             })}
           </div>
           <div className="mono mt-3" style={{ fontSize: 10.5, color: "var(--ink-4)", letterSpacing: "0.06em", textAlign: "right" }}>
-            WEEK {Math.round((44 / 49) * 100)}% · 30D BASELINE {data.derived.suppsAvg30d}%
+            WEEK {overallPct}% · 30D BASELINE {data.derived.suppsAvg30d}%
           </div>
         </div>
 
         <aside className="col-span-12 lg:col-span-4">
           <div className="annot" style={{ borderLeft: "1px solid var(--line)", paddingLeft: 18 }}>
             <Eyebrow className="mb-3">Compliance flag</Eyebrow>
-            <p className="prose" style={{ color: "var(--ink-2)", fontSize: 14 }}>
-              <strong>Magnesium</strong> missed Friday and Saturday — both nights had the week's worst sleep efficiency (89.3% and 87.8%) and the highest disturbance counts.
-            </p>
-            <p className="prose" style={{ color: "var(--ink-2)", fontSize: 14, marginTop: 8 }}>
-              <strong>Saturday</strong> all supplements missed, including thyroid medication. This is the single highest-risk gap of the week — Thyronorm half-life means same-day misses can echo into next-day TSH variability.
-            </p>
+            {(() => {
+              // Worst-compliance supplement and worst-compliance day this week, derived from data.
+              const supps = data.supplements || [];
+              const taken = (s) => (s.total ? s.taken / s.total : 1);
+              const worst = supps.filter(s => s.total > 0).sort((a,b) => taken(a) - taken(b))[0];
+              const worstDay = data.days.reduce((best, d) => {
+                if (!d.supps || d.supps.total === 0) return best;
+                const r = d.supps.taken / d.supps.total;
+                return (best === null || r < best.r) ? { day: d.day, r, taken: d.supps.taken, total: d.supps.total } : best;
+              }, null);
+              return (
+                <>
+                  {worst ? (
+                    <p className="prose" style={{ color: "var(--ink-2)", fontSize: 14 }}>
+                      <strong>{worst.name}</strong> — taken {worst.taken}/{worst.total} day{worst.total !== 1 ? "s" : ""} this week
+                      {worst.missedDays && worst.missedDays.length ? ` (missed ${worst.missedDays.join(", ")})` : ""}.
+                      {worst.critical ? " Critical medication — half-life means same-day misses echo into next-day TSH variability." : ""}
+                    </p>
+                  ) : null}
+                  {worstDay ? (
+                    <p className="prose" style={{ color: "var(--ink-2)", fontSize: 14, marginTop: 8 }}>
+                      <strong>{worstDay.day}</strong> was the lowest-compliance day ({worstDay.taken}/{worstDay.total} supplements taken). Cross-check against that day's recovery.
+                    </p>
+                  ) : null}
+                </>
+              );
+            })()}
             <div className="rule-soft" style={{ margin: "16px 0" }} />
             <div className="grid grid-cols-3 gap-3">
-              <CompTotal label="Critical" value="21/21" sev="green" />
-              <CompTotal label="Adjuncts" value="23/28" sev="amber" />
-              <CompTotal label="Overall" value="44/49" sev="amber" />
+              <CompTotal label="Critical" value={ct ? `${ct.taken}/${ct.total}` : "—"} sev={sevFor(ct)} />
+              <CompTotal label="Adjuncts" value={at ? `${at.taken}/${at.total}` : "—"} sev={sevFor(at)} />
+              <CompTotal label="Overall" value={ot ? `${ot.taken}/${ot.total}` : "—"} sev={sevFor(ot)} />
             </div>
           </div>
         </aside>
@@ -218,7 +250,7 @@ const Bloodwork = ({ data }) => {
 
           <Eyebrow className="mb-2">Recommended next panel</Eyebrow>
           <p className="prose" style={{ fontSize: 14 }}>
-            Order this week: <strong>TSH, FT3, FT4, total + free testosterone, SHBG, LH, FSH, fasting insulin, ApoB, hsCRP.</strong> Reasoning: TSH still elevated 33 days after last test (suggests under-replacement); testosterone work-up overdue given symptomatic low-T; ApoB + fasting insulin to re-baseline against intervention.
+            Order this week: <strong>TSH, FT3, FT4, total + free testosterone, SHBG, LH, FSH, fasting insulin, ApoB, hsCRP.</strong> Reasoning: TSH last checked <span className="mono tnum">{d.daysSinceThyroid}</span> days ago{d.daysSinceThyroid >= 60 ? " — overdue for retest given persistent elevation" : ""}; full panel <span className="mono tnum">{d.daysSinceBlood}</span> days ago{d.daysSinceBlood >= 90 ? " — re-baseline against intervention" : ""}.
           </p>
         </div>
       </div>

@@ -12,9 +12,37 @@ const recColor = (s) => s >= 67 ? "var(--green)" : s >= 34 ? "var(--amber)" : "v
 const recSev = (s) => s >= 67 ? "green" : s >= 34 ? "amber" : "red";
 
 const Timeline = ({ data }) => {
-  const [active, setActive] = uS2(5); // Saturday by default — the worst day
+  // Default to the day with the worst recovery score (lowest non-null score).
+  // Falls back to index 0 (Friday in the Fri-Thu cycle) if all days lack data.
+  const worstIdx = (() => {
+    let best = -1;
+    let bestScore = Infinity;
+    data.days.forEach((d, i) => {
+      const s = d.recovery && typeof d.recovery.score === "number" ? d.recovery.score : null;
+      if (s !== null && s < bestScore) { bestScore = s; best = i; }
+    });
+    return best === -1 ? 0 : best;
+  })();
+  const [active, setActive] = uS2(worstIdx);
 
   const day = data.days[active];
+
+  // Pattern-recognition counts derived from the week's days. Sample build had
+  // these hardcoded; wiring them to data so the strip reflects this week.
+  const lateDinners = data.days.filter((x) => x.food && x.food.late).length;
+  const alcoholUnits = data.days.reduce((a, x) => a + ((x.food && x.food.alcohol) || 0), 0);
+  const skippedDays = data.days.filter((x) => x.food && x.food.skipped).length;
+  const padelDays = data.days.filter((x) => x.workout && /padel/i.test(x.workout.sport || "")).length;
+  const restDays = data.days.filter((x) => !x.workout).length;
+  const fullSuppDays = data.days.filter((x) => x.supps && x.supps.total > 0 && x.supps.taken === x.supps.total).length;
+
+  const sevForFraction = (n, total, redAt = 0.5, amberAt = 0.25) => {
+    const r = total ? n / total : 0;
+    if (r >= redAt) return "red";
+    if (r >= amberAt) return "amber";
+    return "green";
+  };
+
   return (
     <section id="week" className="page" style={{ paddingTop: 24, paddingBottom: 64 }}>
       <SectionMarker n={3} label="The Week in Detail" />
@@ -39,13 +67,12 @@ const Timeline = ({ data }) => {
           <div className="annot" style={{ borderLeft: "1px solid var(--line)", paddingLeft: 18 }}>
             <Eyebrow className="mb-3">Pattern recognition</Eyebrow>
             <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-              <PatternRow label="Late dinner (>21:30)" value="3 / 7" sev="amber" />
-              <PatternRow label="Alcohol intake" value="6 units" sev="amber" />
-              <PatternRow label="Skipped meals" value="3 / 7" sev="amber" />
-              <PatternRow label="Padel sessions" value="4 / 7" sev="red" />
-              <PatternRow label="Rest days" value="2 / 7" sev="red" />
-              <PatternRow label="Supplements complete" value="4 / 7" sev="amber" />
-              <PatternRow label="Sleep onset >23:30" value="4 / 7" sev="amber" last />
+              <PatternRow label="Late dinner (>21:30)" value={`${lateDinners} / 7`} sev={sevForFraction(lateDinners, 7)} />
+              <PatternRow label="Alcohol intake" value={`${alcoholUnits} unit${alcoholUnits === 1 ? "" : "s"}`} sev={alcoholUnits >= 4 ? "red" : alcoholUnits >= 1 ? "amber" : "green"} />
+              <PatternRow label="Skipped meals" value={`${skippedDays} / 7`} sev={sevForFraction(skippedDays, 7)} />
+              <PatternRow label="Padel sessions" value={`${padelDays} / 7`} sev={padelDays >= 4 ? "red" : padelDays >= 2 ? "amber" : "green"} />
+              <PatternRow label="Rest days" value={`${restDays} / 7`} sev={restDays <= 1 ? "red" : restDays <= 2 ? "amber" : "green"} />
+              <PatternRow label="Supplements complete" value={`${fullSuppDays} / 7`} sev={fullSuppDays >= 6 ? "green" : fullSuppDays >= 4 ? "amber" : "red"} last />
             </ul>
           </div>
         </aside>
@@ -56,6 +83,11 @@ const Timeline = ({ data }) => {
 
 const DayCell = ({ d, idx, active, onHover }) => {
   const sev = recSev(d.recovery.score);
+  // Supplement list runs ~22 entries in real data; sample assumed 7. Scale the
+  // 7-dot indicator proportionally to actual taken/total ratio so the visual
+  // density stays the same regardless of supplement-list length.
+  const suppsTotal = d.supps.total || 7;
+  const suppsFilledOf7 = suppsTotal ? Math.min(7, Math.round((7 * d.supps.taken) / suppsTotal)) : 0;
   return (
     <div
       className={`timeline-cell ${active ? "active" : ""}`}
@@ -135,10 +167,10 @@ const DayCell = ({ d, idx, active, onHover }) => {
           {[0,1,2,3,4,5,6].map((i) => (
             <div key={i} style={{
               width: 6, height: 6, borderRadius: 1,
-              background: i < d.supps.taken ? "var(--ink-2)" : "var(--line)",
+              background: i < suppsFilledOf7 ? "var(--ink-2)" : "var(--line)",
             }} />
           ))}
-          <span className="mono" style={{ fontSize: 9.5, color: "var(--ink-4)", marginLeft: 4 }}>{d.supps.taken}/7</span>
+          <span className="mono" style={{ fontSize: 9.5, color: "var(--ink-4)", marginLeft: 4 }}>{d.supps.taken}/{suppsTotal}</span>
         </div>
       </div>
     </div>
@@ -202,9 +234,16 @@ const DayDetail = ({ d }) => {
             <div>Dinner · <span style={{ color: "var(--ink)" }}>{d.food.dinner}</span></div>
             {d.food.note && <div style={{ color: "var(--amber)" }}>Note · {d.food.note}</div>}
             {d.food.skipped && <div style={{ color: "var(--ink-3)" }}>Skipped · {d.food.skipped}</div>}
-            <div>Supplements · <span className="serif-tab" style={{ color: d.supps.taken === 7 ? "var(--green)" : d.supps.taken >= 5 ? "var(--amber)" : "var(--red)" }}>{d.supps.taken}/7</span>
-              {d.supps.missed.length > 0 && <span style={{ color: "var(--ink-4)" }}> · missed {d.supps.missed.join(", ")}</span>}
-            </div>
+            {(() => {
+              const total = d.supps.total || 7;
+              const ratio = total ? d.supps.taken / total : 0;
+              const color = ratio >= 1 ? "var(--green)" : ratio >= 0.7 ? "var(--amber)" : "var(--red)";
+              return (
+                <div>Supplements · <span className="serif-tab" style={{ color }}>{d.supps.taken}/{total}</span>
+                  {d.supps.missed.length > 0 && <span style={{ color: "var(--ink-4)" }}> · missed {d.supps.missed.join(", ")}</span>}
+                </div>
+              );
+            })()}
           </div>
         </div>
       </div>

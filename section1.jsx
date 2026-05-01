@@ -112,8 +112,8 @@ const Verdict = ({ data }) => {
       <div className="reveal" style={{ animationDelay: "0ms" }}>
         <div className="rule-thick" style={{ marginBottom: 16 }} />
         <div className="flex items-center justify-between flex-wrap gap-4">
-          <Eyebrow>Weekly Health Intelligence · Volume IV · No. 17</Eyebrow>
-          <Eyebrow>Issued Sun · {data.patient.dateRange}</Eyebrow>
+          <Eyebrow>Weekly Health Intelligence · {data.patient.week}</Eyebrow>
+          <Eyebrow>Issued Fri · {data.patient.dateRange}</Eyebrow>
         </div>
         <div className="rule" style={{ marginTop: 16, marginBottom: 40 }} />
       </div>
@@ -243,7 +243,7 @@ const Pulse = ({ data }) => {
 
           <div className="prose mt-6" style={{ paddingTop: 18, borderTop: "1px solid var(--line-soft)" }}>
             <p style={{ fontSize: 14 }}>
-              HRV is <strong>17.3% below your 30-day baseline</strong> — a four-week monotonic decline now sits two SDs from your six-month mean. Coefficient of variation <span className="mono tnum">{d.hrvCv}%</span> indicates dysregulated autonomic recovery, not random noise.
+              HRV is <strong>{d.hrvDeltaPct >= 0 ? `${d.hrvDeltaPct.toFixed(1)}% above` : `${Math.abs(d.hrvDeltaPct).toFixed(1)}% below`} your 30-day baseline</strong> — trend is <span className="mono">{d.hrvTrend}</span>. Coefficient of variation <span className="mono tnum">{d.hrvCv}%</span> reflects {d.hrvCv >= 20 ? "dysregulated autonomic recovery, not random noise" : "consistent autonomic state"}.
             </p>
           </div>
         </div>
@@ -314,12 +314,12 @@ const Pulse = ({ data }) => {
       {/* 4-week context strip */}
       <div className="mt-12 grid grid-cols-12 gap-8">
         <div className="col-span-12 lg:col-span-12 metric-block">
-          <Eyebrow>Four-week context · weeks 13 → 17</Eyebrow>
+          <Eyebrow>Four-week context · {data.patient.week}</Eyebrow>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-5">
             <FourWeek title="HRV (ms)" data={d.hrv4wkTrend} format={(v) => v.toFixed(1)} sev="red" />
             <FourWeek title="RHR (bpm)" data={d.rhr4wkTrend} format={(v) => v.toFixed(1)} sev="amber" />
-            <FourWeek title="Recovery (%)" data={[68, 64, 58, 53, 49]} format={(v) => v.toFixed(0)} sev="red" />
-            <FourWeek title="Sleep debt (h)" data={[2.1, 4.8, 8.2, 12.4, 15.7]} format={(v) => v.toFixed(1)} sev="red" inverted />
+            <FourWeek title="Recovery (%)" data={d.recovery4wkTrend} format={(v) => v.toFixed(0)} sev={d.recovery4wkTrend[d.recovery4wkTrend.length-1] >= 67 ? "green" : d.recovery4wkTrend[d.recovery4wkTrend.length-1] >= 34 ? "amber" : "red"} />
+            <FourWeek title="Sleep debt (h)" data={d.sleepDebt4wkTrend} format={(v) => v.toFixed(1)} sev={d.sleepDebt4wkTrend[d.sleepDebt4wkTrend.length-1] >= 10 ? "red" : d.sleepDebt4wkTrend[d.sleepDebt4wkTrend.length-1] >= 5 ? "amber" : "green"} inverted />
           </div>
         </div>
       </div>
