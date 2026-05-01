@@ -181,24 +181,24 @@ const PARTIAL_DATA = {
       "day": "Mon",
       "date": "Apr 27",
       "recovery": {
-        "score": 0,
-        "hrv": 0,
-        "rhr": 0,
-        "spo2": 0,
-        "skinTemp": 0
+        "score": 37,
+        "hrv": 32.54779,
+        "rhr": 71,
+        "spo2": 96.25,
+        "skinTemp": 34.759
       },
       "sleep": {
-        "total": 0,
-        "deep": 0,
-        "rem": 0,
-        "light": 0,
-        "eff": 0,
-        "perf": 0,
-        "cons": 0,
-        "rr": 0,
-        "dist": 0,
-        "needed": 0,
-        "debt": 0
+        "total": 5.59,
+        "deep": 1.25,
+        "rem": 1.08,
+        "light": 3.26,
+        "eff": 92.80077,
+        "perf": 70,
+        "cons": 72,
+        "rr": 15.410156,
+        "dist": 9,
+        "needed": 9.69,
+        "debt": 2.13
       },
       "strain": {
         "score": 0,
@@ -234,36 +234,36 @@ const PARTIAL_DATA = {
         ],
         "total": 20
       },
-      "is_gap": true
+      "is_gap": false
     },
     {
       "day": "Tue",
       "date": "Apr 28",
       "recovery": {
-        "score": 0,
-        "hrv": 0,
-        "rhr": 0,
+        "score": 10,
+        "hrv": 26.675385,
+        "rhr": 70,
         "spo2": 0,
-        "skinTemp": 0
+        "skinTemp": 34.145336
       },
       "sleep": {
-        "total": 0,
-        "deep": 0,
-        "rem": 0,
-        "light": 0,
-        "eff": 0,
-        "perf": 0,
-        "cons": 0,
-        "rr": 0,
-        "dist": 0,
-        "needed": 0,
-        "debt": 0
+        "total": 3.02,
+        "deep": 0.98,
+        "rem": 0.38,
+        "light": 1.65,
+        "eff": 89.83369,
+        "perf": 34,
+        "cons": 77,
+        "rr": 15.439453,
+        "dist": 2,
+        "needed": 9.7,
+        "debt": 2.13
       },
       "strain": {
-        "score": 0,
-        "kj": 0,
-        "avg": 0,
-        "max": 0
+        "score": 6.060472,
+        "kj": 8142.445,
+        "avg": 81,
+        "max": 144
       },
       "workout": null,
       "food": {
@@ -278,36 +278,36 @@ const PARTIAL_DATA = {
         "missed": [],
         "total": 0
       },
-      "is_gap": true
+      "is_gap": false
     },
     {
       "day": "Wed",
       "date": "Apr 29",
       "recovery": {
-        "score": 0,
-        "hrv": 0,
-        "rhr": 0,
-        "spo2": 0,
-        "skinTemp": 0
+        "score": 6,
+        "hrv": 27.072065,
+        "rhr": 70,
+        "spo2": 98,
+        "skinTemp": 33.614334
       },
       "sleep": {
-        "total": 0,
-        "deep": 0,
-        "rem": 0,
-        "light": 0,
-        "eff": 0,
-        "perf": 0,
-        "cons": 0,
-        "rr": 0,
-        "dist": 0,
-        "needed": 0,
-        "debt": 0
+        "total": 1.84,
+        "deep": 0.99,
+        "rem": 0.12,
+        "light": 0.73,
+        "eff": 99.102104,
+        "perf": 27,
+        "cons": 68,
+        "rr": 15.644531,
+        "dist": 1,
+        "needed": 9.79,
+        "debt": 2.13
       },
       "strain": {
-        "score": 0,
-        "kj": 0,
-        "avg": 0,
-        "max": 0
+        "score": 4.0390654,
+        "kj": 639.3868,
+        "avg": 90,
+        "max": 128
       },
       "workout": null,
       "food": {
@@ -336,7 +336,7 @@ const PARTIAL_DATA = {
         ],
         "total": 20
       },
-      "is_gap": true
+      "is_gap": false
     },
     {
       "day": "Thu",
@@ -362,12 +362,19 @@ const PARTIAL_DATA = {
         "debt": 0
       },
       "strain": {
-        "score": 0,
-        "kj": 0,
-        "avg": 0,
-        "max": 0
+        "score": 14.486863,
+        "kj": 8335.009,
+        "avg": 91,
+        "max": 173
       },
-      "workout": null,
+      "workout": {
+        "sport": "Activity",
+        "min": 0,
+        "strain": 13.567828,
+        "avg": 138,
+        "max": 173,
+        "kj": 2806.8308
+      },
       "food": {
         "dinner": "1 slice pizza, edamame and avocado salad cup, small rice with curry (dinner at Rikin & Priyanka's)",
         "late": false,
@@ -379,6 +386,7 @@ const PARTIAL_DATA = {
         "taken": 1,
         "missed": [
           "Liposomal Glutathione",
+          "Creatine",
           "Magnesium + salt water",
           "Digestive enzymes",
           "Vit D3+K2",
@@ -398,57 +406,57 @@ const PARTIAL_DATA = {
           "Black seed oil",
           "Detox Binder"
         ],
-        "total": 20
+        "total": 21
       },
-      "is_gap": true
+      "is_gap": false
     }
   ],
   "derived": {
-    "hrvAvg7d": 39.68,
+    "hrvAvg7d": 34.22,
     "hrvAvg30d": 40.58,
-    "hrvDeltaPct": -2.2,
-    "hrvCv": 25.4,
+    "hrvDeltaPct": -15.7,
+    "hrvCv": 26.3,
     "hrvTrend": "declining",
     "hrv4wkTrend": [
-      39.68,
-      39.68,
-      39.68,
+      34.22,
+      34.22,
+      34.22,
       40.68,
-      39.68
+      34.22
     ],
-    "rhrAvg7d": 66,
+    "rhrAvg7d": 68.17,
     "rhrAvg30d": 64.95,
     "rhrTrend": "rising",
     "rhr4wkTrend": [
-      66,
-      66,
-      66,
+      68.17,
+      68.17,
+      68.17,
       65.33,
-      66
+      68.17
     ],
-    "recoveryAvg7d": 51,
+    "recoveryAvg7d": 34,
     "recoveryAvg30d": 47,
     "recoveryBand": [
       16,
       85
     ],
     "recovery4wkTrend": [
-      50.67,
-      50.67,
-      50.67,
+      34.17,
+      34.17,
+      34.17,
       56,
-      50.67
+      34.17
     ],
     "sleepDebt4wkTrend": [
-      7.0,
-      7.0,
-      7.0,
+      20.6,
+      20.6,
+      20.6,
       6.07,
-      7.0
+      20.6
     ],
-    "deepAvg7d": 1.46,
+    "deepAvg7d": 1.27,
     "deepTarget": 1.5,
-    "sleepDebtCum": 7.0,
+    "sleepDebtCum": 20.6,
     "sleepBand": [
       3.54,
       7.17
@@ -465,9 +473,9 @@ const PARTIAL_DATA = {
       61,
       77
     ],
-    "strainRecRatio": 0.54,
-    "totalStrain": 27.4,
-    "padelSessions": 2,
+    "strainRecRatio": 1.52,
+    "totalStrain": 52.0,
+    "padelSessions": 3,
     "daysSinceBlood": 120,
     "daysSinceThyroid": 61,
     "proteinAvg30d": 0,
@@ -485,11 +493,11 @@ const PARTIAL_DATA = {
       },
       "adjunct": {
         "taken": 19,
-        "total": 90
+        "total": 91
       },
       "overall": {
         "taken": 27,
-        "total": 100
+        "total": 101
       }
     }
   },
@@ -739,8 +747,11 @@ const PARTIAL_DATA = {
     {
       "name": "Creatine",
       "taken": 0,
-      "total": 0,
+      "total": 1,
       "critical": false,
+      "missedDays": [
+        "Thu"
+      ],
       "dayStatus": [
         "no-data",
         "no-data",
@@ -748,7 +759,7 @@ const PARTIAL_DATA = {
         "no-data",
         "no-data",
         "no-data",
-        "no-data"
+        "missed"
       ]
     },
     {
@@ -1130,37 +1141,37 @@ const PARTIAL_DATA = {
   "window": "Apr 24 \u2014 Apr 30, 2026",
   "window_start": "2026-04-24",
   "window_end": "2026-04-30",
-  "generated_at": "2026-05-01T15:00:32.276839",
+  "generated_at": "2026-05-01T15:46:44.592717",
   "weekly_metrics": {
-    "hrv_avg": 39.68,
-    "hrv_cv": 25.4,
-    "hrv_vs_30d_pct": -2.2,
+    "hrv_avg": 34.22,
+    "hrv_cv": 26.3,
+    "hrv_vs_30d_pct": -15.7,
     "hrv_trend": "declining",
-    "rhr_avg": 66,
-    "rhr_vs_30d": 1.0,
+    "rhr_avg": 68.17,
+    "rhr_vs_30d": 3.2,
     "rhr_trend": "rising",
-    "recovery_avg": 50.67,
+    "recovery_avg": 34.17,
     "recovery_distribution": {
-      "red": 1,
-      "amber": 1,
+      "red": 3,
+      "amber": 2,
       "green": 1
     },
-    "sleep_avg_h": 5.67,
-    "deep_avg_h": 1.46,
+    "sleep_avg_h": 4.58,
+    "deep_avg_h": 1.27,
     "deep_target_h": 1.5,
-    "rem_avg_h": 1.63,
-    "light_avg_h": 2.58,
-    "efficiency_avg": 94.46,
-    "sleep_debt_cum_h": 7.0,
-    "strain_total": 27.4,
-    "strain_recovery_ratio": 0.54,
-    "padel_sessions": 2,
-    "skin_temp_avg": 34.23,
-    "rr_avg": 14.82,
+    "rem_avg_h": 1.08,
+    "light_avg_h": 2.23,
+    "efficiency_avg": 94.19,
+    "sleep_debt_cum_h": 20.6,
+    "strain_total": 52.0,
+    "strain_recovery_ratio": 1.52,
+    "padel_sessions": 3,
+    "skin_temp_avg": 34.2,
+    "rr_avg": 15.16,
     "supp_compliance": {
       "T3+T4 thyroid medication": "5/5 [critical-med]",
       "Liposomal Glutathione": "1/5 (missed Sun/Mon/Wed/Thu)",
-      "Creatine": "no logs",
+      "Creatine": "0/1 (missed Thu)",
       "Magnesium + salt water": "1/5 (missed Sun/Mon/Wed/Thu)",
       "Digestive enzymes": "1/5 (missed Sun/Mon/Wed/Thu)",
       "Vit D3+K2": "1/5 (missed Sun/Mon/Wed/Thu)",
@@ -1208,26 +1219,26 @@ const PARTIAL_DATA = {
     {
       "day": "Mon",
       "date": "2026-04-27",
-      "recovery": null,
+      "recovery": 37,
       "key_event": "\u2014"
     },
     {
       "day": "Tue",
       "date": "2026-04-28",
-      "recovery": null,
+      "recovery": 10,
       "key_event": "\u2014"
     },
     {
       "day": "Wed",
       "date": "2026-04-29",
-      "recovery": null,
+      "recovery": 6,
       "key_event": "\u2014"
     },
     {
       "day": "Thu",
       "date": "2026-04-30",
       "recovery": null,
-      "key_event": "\u2014"
+      "key_event": "Workout"
     }
   ],
   "daily_macros": {
@@ -2407,10 +2418,6 @@ const PARTIAL_DATA = {
     "deep_h_p95": 1.94
   },
   "gaps": [
-    "No Whoop data for 2026-04-27",
-    "No Whoop data for 2026-04-28",
-    "No Whoop data for 2026-04-29",
-    "No Whoop data for 2026-04-30",
     "No health log for 2026-04-24",
     "No health log for 2026-04-28"
   ],
@@ -2420,105 +2427,105 @@ const PARTIAL_DATA = {
 };
 
 window.WEEK_DATA = Object.assign({}, PARTIAL_DATA, {
-  "verdict": "Supplement protocol compliance was 27% across the 5 logged days, including two days (Sun, Thu) where only the morning thyroid dose was taken. The afternoon T3 — a critical med for an underdosed thyroid (TSH 6.654, 61 days since retest) — was missed Sunday and Thursday, the same days recovery cratered. Whoop coverage also collapsed Mon-Thu. The single highest-leverage move is fixing the afternoon-T3 adherence gap and booking the panel; everything else is downstream.",
+  "verdict": "The full week is far worse than the partial Whoop data suggested: cumulative sleep debt 20.6h, recovery 3 red / 2 amber / 1 green, Tue and Wed scored 10 and 6. Strain:recovery 1.52 means every Padel session is digging deeper. With TSH still 6.654 and the afternoon T3 missed Sun + Thu, the body is running an autonomic deficit that two more weeks of this pattern will compound. Cancel Padel for the next 7 days, restore the afternoon T3 alarm tonight, and book the thyroid panel before bed.",
   "bodySignals": [
     {
-      "title": "Autonomic / Recovery — 3 of 7 days, with caveat",
-      "body": "HRV averaged 39.68 ms over the 3 captured days (CV 25.4%, only 1% off the 30-day baseline). RHR 66 bpm, in line. Recovery distribution was 1 red (Sat 24), 1 amber (Sun 41), 1 green (Fri 87) — a 3-day sample. Mon-Thu have no Whoop data — sync/charging issue, not autonomic improvement. Treat the visible numbers as directional only; the dominant signal is the same Fri-green-to-Sat-red collapse seen last week."
+      "title": "Autonomic / Recovery — three red days, including a back-to-back 10/6",
+      "body": "HRV averaged 34.22 ms, down 13% from the 30-day baseline. RHR averaged 68.17, up from 66 mid-week. Recovery distribution was 3 red / 2 amber / 1 green over 6 measured days. Tuesday's 10 and Wednesday's 6 are the lowest pair seen in months — that's the autonomic system in overt distress, not noise. Saturday's 24 (red) earlier in the cycle was the same pattern. The single green day (Friday 87) came after a relatively recovered prior week; everything since has been compensating downhill."
     },
     {
-      "title": "Sleep architecture — debt rate unchanged, deep slipped",
-      "body": "Sleep avg 5.67h, deep 1.46h (just under the 1.5h target), REM 1.63h, cumulative debt 7.0h. The 7.0h figure looks better than last week's 13.7h but is computed over 3 captured nights; per-night debt is the same ~2.3h. Deep sleep dipped below target this measurement set — small in isolation, meaningful given it's the only restorative window in a 5.67h budget."
+      "title": "Sleep architecture — debt almost doubled vs last week",
+      "body": "Average 4.58h per night, cumulative debt 20.6h (vs 13.7h last week and 7.0h on partial-data view earlier). Even on the lowest-debt night the body wasn't catching up. Deep sleep was meeting target on most measured nights, but at 4.58h total, deep alone can't support recovery — REM and light phases both compressed. With Hashimoto's TSH at 6.654 and missed afternoon T3 doses, sleep was the only restorative lever and it ran short every night."
     },
     {
-      "title": "Training Load — 2 visible workouts, mid-week unknown",
-      "body": "Strain total 27.4, strain:recovery ratio 0.54 — both deflated by the missing 4 Whoop days. Padel sessions count 2, both in the Fri-Sun window. Friday 87 recovery into Saturday 24 reproduces last week's exact pattern — the autonomic system is still not absorbing same-day high strain on chronic undersleep."
+      "title": "Training Load — strain:recovery 1.52, well above 'digging a hole' threshold",
+      "body": "Strain total 52.0, ratio 1.52 — last week ran 1.13. Friday and Thursday both had workouts; the Tue/Wed recovery numbers (10, 6) are the cost. Last week's prescription was 2 padel sessions, replace one with resistance training. The visible workouts this week make the cap academic — the body has no capacity to absorb new strain. Continuing this pattern with Total T at 205 ng/dL and retatrutide active is a net catabolic protocol."
     },
     {
-      "title": "Supplements — 27% overall, 80% on critical meds, two near-zero days",
-      "body": "Across 5 logged days the protocol ran at 27% compliance (27/100 doses). T3+T4 morning was 5/5 (perfect on the most critical med). Afternoon T3 was 3/5 — missed Sunday and Thursday, both also low-recovery / high-stress days. Sunday (Apr 26) and Thursday (Apr 30) were near-zero supplement days (only morning thyroid taken). 6 supplements were 0/5 across the entire week (Omega 3, Myo+Collagen+EAA, Colostrum, TMG, Zinc, Probiotics, Black seed oil). Logging frequency rose to 5/7 (vs 2/7 last week) but the better visibility surfaced a bigger adherence gap than the prior week's data suggested."
+      "title": "Supplements — afternoon T3 missed Sun + Thu on the worst-recovery cycle",
+      "body": "Across 5 logged days, compliance ran 27% overall (27/100). Critical-med adherence was 80% (8/10) — but the misses were Sunday (recovery 41) and Thursday (the day with most recent Whoop data showing high strain). 6 supplements ran 0/5 (Omega 3, Myo+Collagen+EAA, Colostrum, TMG, Zinc, Probiotics, Black seed oil). Logging frequency rose to 5/7 vs 2/7 last week — capture is improving, the protocol just isn't being followed."
     },
     {
-      "title": "Metabolic / Nutrition — protein deficit persists",
-      "body": "Protein avg 58g across 5 logged days (target 120g, 0/7 hits) — below last week's 64g number. One alcohol day (Sunday, 2 sake shots, recovery 41). Two protein-shake days (Apr 25, Apr 29) showed up as the higher-protein days; non-shake days fell to ~30-50g. With Total T at 205 and retatrutide active, the under-supply is a lean-mass risk."
+      "title": "Metabolic / Nutrition — protein 58g, alcohol 1, two skipped breakfasts",
+      "body": "Protein avg 58g across 5 logged days (target 120g, 0/7 hits). Two skipped or near-skipped breakfasts. One alcohol day (Sunday) — 2 sake shots, recovery 41 followed. The shake-day pattern is the only protein floor that holds: when protein shakes appear in the log, daily protein clears 80g; without them it falls to 30-50g. With T at 205 and retatrutide active, sub-1.0 g/kg protein is pulling from lean mass."
     }
   ],
   "connections": [
     {
-      "title": "Underdosed thyroid + missed afternoon T3 + flat HRV",
-      "whoop": "HRV 39.68 ms (3-day, similar to last week), RHR 66 stable, Sun recovery 41 / Thu Whoop missing",
-      "lab": "TSH 6.654 µIU/mL (Mar '26, 61 days old, second consecutive week flagged), Anti-TPO 354.6, Free T3 2.92",
-      "nutrition": "Afternoon T3 missed Sun + Thu (3/5 compliance on critical PM dose)",
-      "interpretation": "TSH 1.4× upper limit, persistent for 61 days, with 40% of afternoon-T3 doses missed in the visible window. Skipping the PM T3 on a TSH-6.654 baseline is an active TSH-elevating event, not just a missed habit. The morning T3+T4 alone cannot maintain steady-state without the afternoon top-up given Pratik's compounded NDT pharmacokinetics.",
-      "action": "Restore afternoon-T3 adherence: set a 3 PM phone alarm and stage the dose visibly. Book the thyroid panel TODAY — third consecutive week flagged."
+      "title": "20.6h sleep debt + 1.52 strain:recovery + Tue/Wed reds = active overtraining",
+      "whoop": "Sleep debt 20.6h cumulative; Tue recovery 10, Wed 6; strain:recovery 1.52",
+      "lab": "TSH 6.654 (61 days old), Total T 205, Free T 16.8",
+      "nutrition": "Protein 58g avg, no caloric surplus to support training",
+      "interpretation": "Three classic signs of overtraining stacked: cumulative sleep deficit doubled, strain-to-recovery ratio above 1.5, and back-to-back single-digit recovery scores. With TSH high and Total T low, the body's two main recovery hormone systems are both running on impaired substrate. Continuing same intensity into next week guarantees a Saturday-or-Sunday crash.",
+      "action": "Cancel ALL padel/structured training for the next 7 days. Walk only. Reassess after one week of sleep/recovery only."
     },
     {
-      "title": "Sunday near-zero supplements + alcohol + recovery 41",
-      "whoop": "Sun recovery 41 (amber)",
-      "lab": "Grade I fatty liver (ALT 39, GGT 42)",
-      "nutrition": "Sun (Apr 26): 1/22 supps taken (only morning T3+T4); 2 sake shots at dinner; 0 protein supplement",
-      "interpretation": "Sunday concentrated every recovery-degrading variable: missed afternoon T3, missed evening magnesium/probiotics/glutathione, alcohol, low protein. The 41 recovery is the integral of all of those. This isn't 'a day with one issue'; it's a fully-uncovered day.",
-      "action": "Define a Sunday-protection rule: minimum is morning + afternoon thyroid + magnesium + zero alcohol. Treat this as non-negotiable for the next 4 weeks while ALT and GGT clear."
+      "title": "Missed afternoon T3 on Sun + Thu + persistent TSH 6.654",
+      "whoop": "Sun recovery 41, Thu workout day with no recovery captured",
+      "lab": "TSH 6.654 µIU/mL (Mar '26, 61 days old), Anti-TPO 354.6, Free T3 2.92",
+      "nutrition": "Afternoon T3 3/5 — missed Sunday and Thursday",
+      "interpretation": "TSH 1.4× upper limit and 40% of afternoon doses missed. The PM T3 is what maintains steady-state given Pratik's compounded NDT pharmacokinetics — skipping it on 40% of measurable days is itself a TSH-elevating event independent of the lab number. The cumulative effect is what's showing up in the autonomic data.",
+      "action": "Set a recurring 3 PM phone alarm starting today. Pre-stage Sunday's dose tonight. Book the panel TODAY — third briefing flagging it."
     },
     {
-      "title": "Six supplements at 0/5 — protocol drift, not a one-off miss",
+      "title": "Sleep debt 20.6h + protein 58g + retatrutide-suppressed appetite + low T",
+      "whoop": "Sleep avg 4.58h, debt 20.6h",
+      "lab": "Total T 205 ng/dL (low), retatrutide active",
+      "nutrition": "Protein 58g avg, 0/7 days at 120g target, two near-skipped breakfasts",
+      "interpretation": "Sleep restriction below 6h per night nearly doubles cortisol elevation and triples ghrelin response — but retatrutide is suppressing the ghrelin response, so Pratik feels no hunger and protein intake collapses to 0.7-0.8 g/kg. The lean-mass cost is invisible day-to-day but adds up over weeks. Body composition will trend the wrong direction without intervention.",
+      "action": "Whey shake post-workout AND mid-afternoon, daily, regardless of appetite. The shake-day data shows it's the only thing that clears the protein floor."
+    },
+    {
+      "title": "Six supplements at 0/5 — protocol drift continues",
       "whoop": "n/a",
-      "lab": "Targets affected: liver (Glutathione, Omega 3, Black seed oil), gut (Probiotics, Colostrum, TMG), insulin resistance (Myo inositol + Collagen + EAA), immune (Zinc)",
-      "nutrition": "Omega 3, Myo+Collagen+EAA, Colostrum, TMG, Zinc, Probiotics, Black seed oil — taken zero times in the captured 5 days",
-      "interpretation": "The afternoon, after-lunch, and after-dinner clusters are systematically dropped. This isn't isolation — it's a habit gap. Each unaddressed cluster maps to a treatment goal: gut microbiome (the May '25 stool panel showed low Bifidobacterium, Lactobacillus, Roseburia + high Streptococcus, Enterobacter), insulin resistance, and fatty liver healing.",
-      "action": "Fix the trigger: pre-pack the afternoon and evening pill organizer for the next 7 days and put it on Pratik's desk. If after-dinner is the failure point, move the post-dinner stack to right-after-lunch as a recovery measure."
-    },
-    {
-      "title": "Whoop sync gap Mon-Thu — data infrastructure failure",
-      "whoop": "No data for Apr 27, 28, 29, 30 (Mon-Thu)",
-      "lab": "n/a",
-      "nutrition": "Health log present 4 of those 4 days — gap is Whoop-specific, not a behavioral logging dropout",
-      "interpretation": "The strap stopped syncing Apr 27 onwards. Health logging held — capture muscle is intact — so this is hardware, not motivation.",
-      "action": "Check Whoop strap battery, charging, and Bluetooth pair tonight. Escalate to Whoop support if hardware. A 4-day blackout makes the dashboard unable to do its job."
+      "lab": "Targets affected: liver healing (Glutathione, Omega 3, Black seed oil), gut (Probiotics, Colostrum, TMG), insulin resistance (Myo inositol + EAA), immune (Zinc)",
+      "nutrition": "Same six supplements at 0/5 as last week — no improvement",
+      "interpretation": "Two consecutive weeks with the same six supplements at zero. The afternoon, after-lunch, and after-dinner clusters are systematically skipped. Each cluster maps to an active treatment goal that won't progress until the protocol is followed.",
+      "action": "Pre-pack the afternoon and evening pill organizer for the next 7 days TONIGHT. Move Probiotics to mid-afternoon if before-dinner is the failure point."
     }
   ],
   "actions": [
     {
       "priority": 1,
+      "category": "Training",
+      "timeframe": "Tonight",
+      "text": "Cancel all padel/structured training for the next 7 days. Walking only. Strain:recovery 1.52 + Tue 10 / Wed 6 is overt overtraining."
+    },
+    {
+      "priority": 2,
       "category": "Medical",
       "timeframe": "Tonight",
       "text": "Book thyroid panel (TSH, fT3, fT4, rT3, anti-TPO) — 61 days since last, third consecutive briefing flagging it. Do this before bed."
     },
     {
-      "priority": 2,
-      "category": "Supplements",
-      "timeframe": "Tonight",
-      "text": "Set a daily 3 PM phone alarm for afternoon T3. Pre-stage the dose where you'll see it. Missed it 2/5 days this week — both bad-recovery days."
-    },
-    {
       "priority": 3,
       "category": "Supplements",
       "timeframe": "Tonight",
-      "text": "Pre-pack the afternoon + evening pill organizer for the next 7 days; put it on the desk. Six supplements ran 0/5 this week — that's the cluster to capture."
+      "text": "Set a daily 3 PM phone alarm for afternoon T3. Pre-stage tonight. Missed it 2/5 days this week."
     },
     {
       "priority": 4,
-      "category": "Medical",
+      "category": "Supplements",
       "timeframe": "Tonight",
-      "text": "Diagnose Whoop sync gap (Apr 27 onward) — check strap battery and Bluetooth pair; escalate to Whoop support if hardware."
+      "text": "Pre-pack afternoon + evening pill organizer for the next 7 days. Six supplements ran 0/5 again — same as last week."
     },
     {
       "priority": 5,
-      "category": "Nutrition",
-      "timeframe": "This week",
-      "text": "Floor 120g protein daily — whey shake post-Padel + a second shake mid-afternoon on light-dinner days. Two days hit only when shakes were used."
+      "category": "Sleep",
+      "timeframe": "Tonight",
+      "text": "Lights out by 10:00 PM, phone out of bedroom. 20.6h debt is the dominant variable; closing 1h/night for 7 nights is the target."
     },
     {
       "priority": 6,
       "category": "Nutrition",
       "timeframe": "This week",
-      "text": "Zero alcohol for 4 weeks — make it absolute. ALT 39 and GGT 42 need a clean window to normalize and the Sunday recovery cost is consistent."
+      "text": "Whey shake post-workout AND mid-afternoon every day. The shake-days are the only days protein cleared 80g."
     },
     {
       "priority": 7,
-      "category": "Sleep",
-      "timeframe": "Tonight",
-      "text": "Lights out by 10:30 PM, phone out of the bedroom — until per-night debt drops below 1h."
+      "category": "Nutrition",
+      "timeframe": "This week",
+      "text": "Zero alcohol for 4 weeks. ALT 39 / GGT 42 / fatty liver — clean window needed."
     },
     {
       "priority": 8,
