@@ -54,6 +54,7 @@ const Supplements = ({ data }) => {
                   <div className="col-span-5">
                     <div className="serif" style={{ fontSize: 16 }}>{s.name}</div>
                     {s.critical && <div className="mono" style={{ fontSize: 9.5, color: "var(--ink-4)", letterSpacing: "0.1em", textTransform: "uppercase" }}>critical</div>}
+                    {s.workoutOnly && <div className="mono" style={{ fontSize: 9.5, color: "var(--ink-4)", letterSpacing: "0.1em", textTransform: "uppercase" }}>workout-only</div>}
                   </div>
                   <div className="col-span-7 grid grid-cols-9 gap-1 items-center">
                     {dayLabels.map((d, i) => {

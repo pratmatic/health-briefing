@@ -1,15 +1,15 @@
 /* global React, WEEK_DATA, HRPrimitives */
 const { useState: uS2 } = React;
 const {
-  SectionMarker, Eyebrow, Sev, Delta, TrendArrow,
+  SectionMarker, Eyebrow, Sev, Delta, TrendArrow, fmtH,
 } = window.HRPrimitives;
 
 /* ============================================================
    03 · THE WEEK IN DETAIL — daily timeline
    ============================================================ */
 
-const recColor = (s) => s >= 67 ? "var(--green)" : s >= 34 ? "var(--amber)" : "var(--red)";
-const recSev = (s) => s >= 67 ? "green" : s >= 34 ? "amber" : "red";
+const recColor = (s) => s == null ? "var(--ink-4)" : s >= 67 ? "var(--green)" : s >= 34 ? "var(--amber)" : "var(--red)";
+const recSev = (s) => s == null ? "grey" : s >= 67 ? "green" : s >= 34 ? "amber" : "red";
 
 const Timeline = ({ data }) => {
   // Default to the day with the worst recovery score (lowest non-null score).
@@ -82,12 +82,12 @@ const Timeline = ({ data }) => {
 };
 
 const DayCell = ({ d, idx, active, onHover }) => {
-  const sev = recSev(d.recovery.score);
+  const recoveryNull = d.recovery.score == null;
+  const sleepNull = d.sleep.total == null;
+  const suppsHasData = d.supps && d.supps.total > 0;
   // Supplement list runs ~22 entries in real data; sample assumed 7. Scale the
-  // 7-dot indicator proportionally to actual taken/total ratio so the visual
-  // density stays the same regardless of supplement-list length.
-  const suppsTotal = d.supps.total || 7;
-  const suppsFilledOf7 = suppsTotal ? Math.min(7, Math.round((7 * d.supps.taken) / suppsTotal)) : 0;
+  // 7-dot indicator proportionally so visual density stays consistent.
+  const suppsFilledOf7 = suppsHasData ? Math.min(7, Math.round((7 * d.supps.taken) / d.supps.total)) : 0;
   return (
     <div
       className={`timeline-cell ${active ? "active" : ""}`}
@@ -108,9 +108,9 @@ const DayCell = ({ d, idx, active, onHover }) => {
       {/* Recovery */}
       <div style={{ marginTop: 14 }}>
         <div className="flex items-baseline gap-2">
-          <span className="dot" style={{ background: recColor(d.recovery.score), boxShadow: `0 0 0 3px color-mix(in oklch, ${recColor(d.recovery.score)} 20%, transparent)` }} />
-          <span className="serif-tab" style={{ fontSize: 28, letterSpacing: "-0.02em", color: "var(--ink)" }}>{d.recovery.score}</span>
-          <span className="mono" style={{ fontSize: 10, color: "var(--ink-4)" }}>%</span>
+          <span className="dot" style={{ background: recColor(d.recovery.score), boxShadow: recoveryNull ? "none" : `0 0 0 3px color-mix(in oklch, ${recColor(d.recovery.score)} 20%, transparent)` }} />
+          <span className="serif-tab" style={{ fontSize: 28, letterSpacing: "-0.02em", color: recoveryNull ? "var(--ink-4)" : "var(--ink)" }}>{recoveryNull ? "—" : d.recovery.score}</span>
+          {!recoveryNull && <span className="mono" style={{ fontSize: 10, color: "var(--ink-4)" }}>%</span>}
         </div>
         <div className="mono" style={{ fontSize: 9.5, color: "var(--ink-3)", letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 2 }}>recovery</div>
         {/* Typical-range band */}
@@ -120,11 +120,13 @@ const DayCell = ({ d, idx, active, onHover }) => {
             left: "42%", width: "36%",
             background: "var(--ink-4)", opacity: 0.35,
           }} />
-          <div style={{
-            position: "absolute", top: -2, bottom: -2,
-            left: `${d.recovery.score}%`, width: 1.5,
-            background: recColor(d.recovery.score),
-          }} />
+          {!recoveryNull && (
+            <div style={{
+              position: "absolute", top: -2, bottom: -2,
+              left: `${d.recovery.score}%`, width: 1.5,
+              background: recColor(d.recovery.score),
+            }} />
+          )}
         </div>
         <div className="mono" style={{ fontSize: 9, color: "var(--ink-4)", letterSpacing: "0.06em", marginTop: 3, opacity: 0.7 }}>typical 42–78</div>
       </div>
@@ -132,11 +134,13 @@ const DayCell = ({ d, idx, active, onHover }) => {
       {/* Sleep mini bar */}
       <div style={{ marginTop: 14 }}>
         <div className="flex items-baseline gap-1">
-          <span className="serif-tab" style={{ fontSize: 14, color: "var(--ink-2)" }}>{d.sleep.total.toFixed(1)}</span>
-          <span className="mono" style={{ fontSize: 9.5, color: "var(--ink-4)" }}>h sleep · {d.sleep.deep.toFixed(2)}h deep</span>
+          <span className="serif-tab" style={{ fontSize: 14, color: sleepNull ? "var(--ink-4)" : "var(--ink-2)" }}>{sleepNull ? "—" : fmtH(d.sleep.total)}</span>
+          {!sleepNull && <span className="mono" style={{ fontSize: 9.5, color: "var(--ink-4)" }}>· deep {fmtH(d.sleep.deep)}</span>}
         </div>
         <div style={{ height: 2, background: "var(--line-soft)", marginTop: 4 }}>
-          <div style={{ height: "100%", width: `${(d.sleep.total / 9) * 100}%`, background: d.sleep.total < 6 ? "var(--red)" : d.sleep.total < 7 ? "var(--amber)" : "var(--green)" }} />
+          {!sleepNull && (
+            <div style={{ height: "100%", width: `${(d.sleep.total / 9) * 100}%`, background: d.sleep.total < 6 ? "var(--red)" : d.sleep.total < 7 ? "var(--amber)" : "var(--green)" }} />
+          )}
         </div>
       </div>
 
@@ -167,10 +171,12 @@ const DayCell = ({ d, idx, active, onHover }) => {
           {[0,1,2,3,4,5,6].map((i) => (
             <div key={i} style={{
               width: 6, height: 6, borderRadius: 1,
-              background: i < suppsFilledOf7 ? "var(--ink-2)" : "var(--line)",
+              background: suppsHasData && i < suppsFilledOf7 ? "var(--ink-2)" : "var(--line)",
             }} />
           ))}
-          <span className="mono" style={{ fontSize: 9.5, color: "var(--ink-4)", marginLeft: 4 }}>{d.supps.taken}/{suppsTotal}</span>
+          <span className="mono" style={{ fontSize: 9.5, color: "var(--ink-4)", marginLeft: 4 }}>
+            {suppsHasData ? `${d.supps.taken}/${d.supps.total}` : "no log"}
+          </span>
         </div>
       </div>
     </div>
@@ -188,6 +194,9 @@ const Flag = ({ children, sev }) => (
 );
 
 const DayDetail = ({ d }) => {
+  const recoveryNull = d.recovery.score == null;
+  const sleepNull = d.sleep.total == null;
+  const fmtNum = (v, decimals = 1) => v == null ? "—" : Number(v).toFixed(decimals);
   return (
     <div style={{ padding: "20px 0" }}>
       <div className="flex items-baseline justify-between mb-3">
@@ -196,7 +205,7 @@ const DayDetail = ({ d }) => {
           <div className="serif" style={{ fontSize: 26, letterSpacing: "-0.015em", marginTop: 2 }}>{d.day} · {d.date}</div>
         </div>
         <div className="flex items-baseline gap-2">
-          <span className="serif-tab" style={{ fontSize: 38, color: recColor(d.recovery.score) }}>{d.recovery.score}</span>
+          <span className="serif-tab" style={{ fontSize: 38, color: recColor(d.recovery.score) }}>{recoveryNull ? "—" : d.recovery.score}</span>
           <span className="mono" style={{ fontSize: 11, color: "var(--ink-3)" }}>recovery</span>
         </div>
       </div>
@@ -204,15 +213,15 @@ const DayDetail = ({ d }) => {
       <div className="rule" />
 
       <div className="grid grid-cols-12 gap-6 mt-5">
-        <DetailMetric label="HRV" value={d.recovery.hrv.toFixed(1)} unit="ms" />
-        <DetailMetric label="RHR" value={d.recovery.rhr} unit="bpm" />
-        <DetailMetric label="SpO₂" value={d.recovery.spo2.toFixed(1)} unit="%" />
-        <DetailMetric label="Skin temp" value={`${d.recovery.skinTemp.toFixed(1)}`} unit="°C" />
+        <DetailMetric label="HRV" value={fmtNum(d.recovery.hrv)} unit="ms" />
+        <DetailMetric label="RHR" value={d.recovery.rhr ?? "—"} unit="bpm" />
+        <DetailMetric label="SpO₂" value={fmtNum(d.recovery.spo2)} unit="%" />
+        <DetailMetric label="Skin temp" value={fmtNum(d.recovery.skinTemp)} unit="°C" />
 
-        <DetailMetric label="Sleep" value={d.sleep.total.toFixed(2)} unit="h" />
-        <DetailMetric label="Deep" value={d.sleep.deep.toFixed(2)} unit="h" />
-        <DetailMetric label="REM" value={d.sleep.rem.toFixed(2)} unit="h" />
-        <DetailMetric label="Efficiency" value={d.sleep.eff.toFixed(1)} unit="%" />
+        <DetailMetric label="Sleep" value={sleepNull ? "—" : fmtH(d.sleep.total)} />
+        <DetailMetric label="Deep" value={d.sleep.deep == null ? "—" : fmtH(d.sleep.deep)} />
+        <DetailMetric label="REM" value={d.sleep.rem == null ? "—" : fmtH(d.sleep.rem)} />
+        <DetailMetric label="Efficiency" value={fmtNum(d.sleep.eff)} unit="%" />
       </div>
 
       <div className="rule-soft" style={{ marginTop: 22, marginBottom: 20 }} />
@@ -235,8 +244,11 @@ const DayDetail = ({ d }) => {
             {d.food.note && <div style={{ color: "var(--amber)" }}>Note · {d.food.note}</div>}
             {d.food.skipped && <div style={{ color: "var(--ink-3)" }}>Skipped · {d.food.skipped}</div>}
             {(() => {
-              const total = d.supps.total || 7;
-              const ratio = total ? d.supps.taken / total : 0;
+              const total = d.supps.total;
+              if (!total) {
+                return <div>Supplements · <span className="serif-tab" style={{ color: "var(--ink-4)" }}>no log</span></div>;
+              }
+              const ratio = d.supps.taken / total;
               const color = ratio >= 1 ? "var(--green)" : ratio >= 0.7 ? "var(--amber)" : "var(--red)";
               return (
                 <div>Supplements · <span className="serif-tab" style={{ color }}>{d.supps.taken}/{total}</span>

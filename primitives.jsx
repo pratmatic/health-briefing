@@ -77,19 +77,22 @@ const Sparkline = ({ data, color = "var(--ink)", height = 36, fill = false, base
 const RecoveryDistribution = ({ days }) => {
   const buckets = days.map((d) => {
     const s = d.recovery.score;
-    const c = s >= 67 ? "var(--green)" : s >= 34 ? "var(--amber)" : "var(--red)";
-    return { ...d, color: c };
+    const isNull = s == null;
+    const c = isNull ? "var(--line)" :
+              s >= 67 ? "var(--green)" :
+              s >= 34 ? "var(--amber)" : "var(--red)";
+    return { ...d, color: c, _isNull: isNull };
   });
   const max = 100;
   return (
     <div className="flex items-end gap-[3px]" style={{ height: 36 }}>
       {buckets.map((d) => (
-        <div key={d.day} className="flex-1 flex flex-col items-center" title={`${d.day}: ${d.recovery.score}%`}>
+        <div key={d.day} className="flex-1 flex flex-col items-center" title={`${d.day}: ${d._isNull ? "—" : d.recovery.score + "%"}`}>
           <div style={{
             width: "100%",
-            height: `${(d.recovery.score / max) * 100}%`,
+            height: d._isNull ? "8%" : `${(d.recovery.score / max) * 100}%`,
             background: d.color,
-            opacity: 0.85,
+            opacity: d._isNull ? 0.4 : 0.85,
             minHeight: 2,
           }} />
         </div>
@@ -104,13 +107,20 @@ const SleepStack = ({ days, target = 8 }) => {
     <div className="flex items-end gap-[3px]" style={{ height: 48 }}>
       {days.map((d) => {
         const total = d.sleep.total;
+        if (total == null || total === 0) {
+          return (
+            <div key={d.day} className="flex-1" style={{ height: "100%" }} title={`${d.day}: —`}>
+              <div style={{ height: "8%", background: "var(--line)", opacity: 0.4, minHeight: 2 }} />
+            </div>
+          );
+        }
         const max = 9;
         const totalPct = (total / max) * 100;
         const deepPct = (d.sleep.deep / total) * totalPct;
         const remPct = (d.sleep.rem / total) * totalPct;
         const lightPct = totalPct - deepPct - remPct;
         return (
-          <div key={d.day} className="flex-1 flex flex-col-reverse" style={{ height: "100%" }} title={`${d.day}: ${total.toFixed(1)}h`}>
+          <div key={d.day} className="flex-1 flex flex-col-reverse" style={{ height: "100%" }} title={`${d.day}: ${fmtH(total)}`}>
             <div style={{ height: `${deepPct}%`, background: "var(--ink)", opacity: 0.95 }} />
             <div style={{ height: `${remPct}%`, background: "var(--ink-2)", opacity: 0.7 }} />
             <div style={{ height: `${lightPct}%`, background: "var(--ink-4)", opacity: 0.55 }} />
@@ -143,7 +153,17 @@ const TrendBars = ({ data, color = "var(--ink-2)", highlight = "var(--gold)" }) 
   );
 };
 
+// Format hours as "Xh YYm" (e.g. 4.58 -> "4h 35m"). Renders "—" for null/undefined.
+const fmtH = (v) => {
+  if (v == null || (typeof v === "number" && !isFinite(v))) return "—";
+  const h = Math.floor(v);
+  const m = Math.round((v - h) * 60);
+  if (m === 60) return `${h + 1}h 0m`;
+  return `${h}h ${m}m`;
+};
+
 window.HRPrimitives = {
   SectionMarker, Eyebrow, Sev, Delta, TrendArrow,
   Sparkline, RecoveryDistribution, SleepStack, TrendBars,
+  fmtH,
 };

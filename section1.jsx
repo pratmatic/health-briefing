@@ -1,7 +1,7 @@
 /* global React, WEEK_DATA, HRPrimitives */
 const {
   SectionMarker, Eyebrow, Sev, Delta, TrendArrow,
-  Sparkline, RecoveryDistribution, SleepStack, TrendBars,
+  Sparkline, RecoveryDistribution, SleepStack, TrendBars, fmtH,
 } = window.HRPrimitives;
 
 const VERDICT_EMPHASIS_WORDS = [
@@ -166,7 +166,7 @@ const Verdict = ({ data }) => {
               </div>
               <div>
                 <div style={{ color: "var(--ink-3)" }}>Sleep debt</div>
-                <div className="serif-tab" style={{ color: "var(--ink)", fontSize: 22 }}>{d.sleepDebtCum.toFixed(1)}<span style={{ color: "var(--ink-4)", fontSize: 14 }}>h</span></div>
+                <div className="serif-tab" style={{ color: "var(--ink)", fontSize: 22 }}>{fmtH(d.sleepDebtCum)}</div>
                 <span className="mono tnum" style={{ color: "var(--red)", fontSize: 11 }}>cumulative · 7d</span>
               </div>
             </div>
@@ -198,16 +198,22 @@ const Pulse = ({ data }) => {
   const hrvSpark = data.days.map((x) => x.recovery.hrv);
   const rhrSpark = data.days.map((x) => x.recovery.rhr);
 
-  const greenDays = data.days.filter((x) => x.recovery.score >= 67).length;
-  const amberDays = data.days.filter((x) => x.recovery.score >= 34 && x.recovery.score < 67).length;
-  const redDays   = data.days.filter((x) => x.recovery.score < 34).length;
+  // Recovery distribution. Treat null score as "no data" so it doesn't get
+  // miscounted as red (JS `null < 34` coerces to `0 < 34` and would otherwise
+  // inflate the red-day count).
+  const recoveryDays = data.days.filter((x) => x.recovery.score != null);
+  const greenDays = recoveryDays.filter((x) => x.recovery.score >= 67).length;
+  const amberDays = recoveryDays.filter((x) => x.recovery.score >= 34 && x.recovery.score < 67).length;
+  const redDays   = recoveryDays.filter((x) => x.recovery.score < 34).length;
+  const noDataDays = data.days.length - recoveryDays.length;
 
-  const totalSleep = data.days.reduce((a, x) => a + x.sleep.total, 0);
-  const avgSleep = totalSleep / 7;
-  const totalNeeded = data.days.reduce((a, x) => a + x.sleep.needed, 0);
-  const avgNeeded = totalNeeded / 7;
+  const sleepDays = data.days.filter((x) => x.sleep.total != null && x.sleep.total > 0);
+  const totalSleep = sleepDays.reduce((a, x) => a + x.sleep.total, 0);
+  const avgSleep = sleepDays.length ? totalSleep / sleepDays.length : null;
+  const totalNeeded = sleepDays.reduce((a, x) => a + (x.sleep.needed || 0), 0);
+  const avgNeeded = sleepDays.length ? totalNeeded / sleepDays.length : null;
 
-  const deepPct = (d.deepAvg7d / avgSleep) * 100;
+  const deepPct = avgSleep ? (d.deepAvg7d / avgSleep) * 100 : 0;
 
   return (
     <section id="pulse" className="page" style={{ paddingTop: 24, paddingBottom: 64 }}>
@@ -266,23 +272,27 @@ const Pulse = ({ data }) => {
             unit="%"
             baseline={`30d ${d.recoveryAvg30d}%`}
             delta={<Delta value={d.recoveryAvg7d - d.recoveryAvg30d} suffix=" pts" format={(v) => v.toFixed(0)} />}
-            note={<>{redDays} red · {amberDays} amber · {greenDays} green. Two consecutive sub-40 days.</>}
+            note={<>{redDays} red · {amberDays} amber · {greenDays} green{noDataDays ? ` · ${noDataDays} no data` : ""}.</>}
             chart={<RecoveryDistribution days={data.days} />}
           />
           <MetricRow
             eyebrow="Sleep · total vs needed"
-            value={avgSleep.toFixed(1)}
-            unit="h / night"
-            baseline={`30d 7.1h`}
-            delta={<span className="mono tnum" style={{ color: "var(--red)", fontSize: 11 }}>▼ {(avgNeeded - avgSleep).toFixed(1)}h short of need</span>}
-            note={<>Cumulative debt <span className="serif-tab">{d.sleepDebtCum.toFixed(1)}h</span>. Two nights below 5.5h.</>}
+            value={avgSleep == null ? "—" : fmtH(avgSleep)}
+            unit="/ night"
+            baseline={`30d 7h 6m`}
+            delta={
+              avgSleep != null && avgNeeded != null
+                ? <span className="mono tnum" style={{ color: "var(--red)", fontSize: 11 }}>▼ {fmtH(avgNeeded - avgSleep)} short of need</span>
+                : <span className="mono tnum" style={{ color: "var(--ink-4)", fontSize: 11 }}>—</span>
+            }
+            note={<>Cumulative debt <span className="serif-tab">{fmtH(d.sleepDebtCum)}</span>. Two nights below 5h 30m.</>}
             chart={<SleepStack days={data.days} />}
           />
           <MetricRow
             eyebrow="Deep Sleep · avg / target"
-            value={d.deepAvg7d.toFixed(2)}
-            unit={`/ ${d.deepTarget}h target`}
-            baseline={`30d 1.34h`}
+            value={fmtH(d.deepAvg7d)}
+            unit={`/ ${fmtH(d.deepTarget)} target`}
+            baseline={`30d 1h 20m`}
             delta={<span className="mono tnum" style={{ color: "var(--amber)", fontSize: 11 }}>{deepPct.toFixed(0)}% of total</span>}
             note={<>Below target on <span className="serif-tab">5 / 7</span> nights. GH release likely blunted.</>}
             chart={<TrendBars data={data.days.map((x) => x.sleep.deep)} color="var(--ink-3)" highlight="var(--ink)" />}
