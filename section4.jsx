@@ -35,16 +35,20 @@ const Supplements = ({ data }) => {
             </div>
 
             {data.supplements.map((s) => {
-              const taken = (day) => {
-                const dayData = data.days.find((dd) => dd.day === day);
-                if (!dayData) return false;
-                const dayTotal = dayData.supps.total || 7;
-                if (dayData.supps.taken === dayTotal) return true;
-                if (dayData.supps.missed.includes("All")) return false;
-                return !dayData.supps.missed.some((m) => s.name.toLowerCase().includes(m.toLowerCase()));
+              // Per-day state from starter.py: "taken" | "missed" | "no-data".
+              // Falls back to inference if dayStatus isn't present (older data files).
+              const statusFor = (i, day) => {
+                if (Array.isArray(s.dayStatus) && s.dayStatus[i]) return s.dayStatus[i];
+                if (s.missedDays && s.missedDays.includes(day)) return "missed";
+                if (s.total === 0) return "no-data";
+                return "taken";
               };
-              const rate = s.taken / s.total;
-              const rateColor = rate === 1 ? "var(--green)" : rate >= 0.7 ? "var(--amber)" : "var(--red)";
+              const rate = s.total > 0 ? s.taken / s.total : null;
+              const rateColor =
+                rate === null   ? "var(--ink-4)" :
+                rate === 1      ? "var(--green)" :
+                rate >= 0.7     ? "var(--amber)" :
+                                  "var(--red)";
               return (
                 <div key={s.name} className="grid grid-cols-12 items-center" style={{ padding: "12px 0", borderBottom: "1px solid var(--line-soft)" }}>
                   <div className="col-span-5">
@@ -52,18 +56,18 @@ const Supplements = ({ data }) => {
                     {s.critical && <div className="mono" style={{ fontSize: 9.5, color: "var(--ink-4)", letterSpacing: "0.1em", textTransform: "uppercase" }}>critical</div>}
                   </div>
                   <div className="col-span-7 grid grid-cols-9 gap-1 items-center">
-                    {dayLabels.map((d) => {
-                      const ok = taken(d);
-                      return (
-                        <div key={d} style={{
-                          height: 18, background: ok ? "var(--ink)" : "transparent",
-                          border: ok ? "none" : "1px solid var(--line)",
-                          opacity: ok ? 0.92 : 1,
-                        }} />
-                      );
+                    {dayLabels.map((d, i) => {
+                      const state = statusFor(i, d);
+                      const styleByState = {
+                        "taken":   { background: "var(--ink)", border: "none",                     opacity: 0.92 },
+                        "missed":  { background: "transparent", border: "1px solid var(--line)",   opacity: 1 },
+                        "no-data": { background: "transparent", border: "1px dashed var(--line-soft)", opacity: 0.45 },
+                      };
+                      const style = styleByState[state] || styleByState["no-data"];
+                      return <div key={d} title={state} style={{ height: 18, ...style }} />;
                     })}
                     <div className="mono tnum" style={{ gridColumn: "span 2", textAlign: "right", color: rateColor, fontSize: 13, fontWeight: 500 }}>
-                      {s.taken}/{s.total}
+                      {s.total === 0 ? "—" : `${s.taken}/${s.total}`}
                     </div>
                   </div>
                 </div>

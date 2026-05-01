@@ -704,7 +704,16 @@ const PARTIAL_DATA = {
       "name": "T3+T4 thyroid medication",
       "taken": 5,
       "total": 5,
-      "critical": true
+      "critical": true,
+      "dayStatus": [
+        "no-data",
+        "taken",
+        "taken",
+        "taken",
+        "no-data",
+        "taken",
+        "taken"
+      ]
     },
     {
       "name": "Liposomal Glutathione",
@@ -716,13 +725,31 @@ const PARTIAL_DATA = {
         "Mon",
         "Wed",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "taken",
+        "missed",
+        "missed",
+        "no-data",
+        "missed",
+        "missed"
       ]
     },
     {
       "name": "Creatine",
       "taken": 0,
       "total": 0,
-      "critical": false
+      "critical": false,
+      "dayStatus": [
+        "no-data",
+        "no-data",
+        "no-data",
+        "no-data",
+        "no-data",
+        "no-data",
+        "no-data"
+      ]
     },
     {
       "name": "Magnesium + salt water",
@@ -734,6 +761,15 @@ const PARTIAL_DATA = {
         "Mon",
         "Wed",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "taken",
+        "missed",
+        "missed",
+        "no-data",
+        "missed",
+        "missed"
       ]
     },
     {
@@ -746,6 +782,15 @@ const PARTIAL_DATA = {
         "Mon",
         "Wed",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "taken",
+        "missed",
+        "missed",
+        "no-data",
+        "missed",
+        "missed"
       ]
     },
     {
@@ -758,6 +803,15 @@ const PARTIAL_DATA = {
         "Mon",
         "Wed",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "taken",
+        "missed",
+        "missed",
+        "no-data",
+        "missed",
+        "missed"
       ]
     },
     {
@@ -768,6 +822,15 @@ const PARTIAL_DATA = {
       "missedDays": [
         "Sun",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "taken",
+        "missed",
+        "taken",
+        "no-data",
+        "taken",
+        "missed"
       ]
     },
     {
@@ -781,6 +844,15 @@ const PARTIAL_DATA = {
         "Mon",
         "Wed",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "missed",
+        "missed",
+        "missed",
+        "no-data",
+        "missed",
+        "missed"
       ]
     },
     {
@@ -791,6 +863,15 @@ const PARTIAL_DATA = {
       "missedDays": [
         "Sun",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "taken",
+        "missed",
+        "taken",
+        "no-data",
+        "taken",
+        "missed"
       ]
     },
     {
@@ -801,6 +882,15 @@ const PARTIAL_DATA = {
       "missedDays": [
         "Sun",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "taken",
+        "missed",
+        "taken",
+        "no-data",
+        "taken",
+        "missed"
       ]
     },
     {
@@ -814,6 +904,15 @@ const PARTIAL_DATA = {
         "Mon",
         "Wed",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "missed",
+        "missed",
+        "missed",
+        "no-data",
+        "missed",
+        "missed"
       ]
     },
     {
@@ -827,6 +926,15 @@ const PARTIAL_DATA = {
         "Mon",
         "Wed",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "missed",
+        "missed",
+        "missed",
+        "no-data",
+        "missed",
+        "missed"
       ]
     },
     {
@@ -839,6 +947,15 @@ const PARTIAL_DATA = {
         "Mon",
         "Wed",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "taken",
+        "missed",
+        "missed",
+        "no-data",
+        "missed",
+        "missed"
       ]
     },
     {
@@ -851,6 +968,15 @@ const PARTIAL_DATA = {
         "Mon",
         "Wed",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "taken",
+        "missed",
+        "missed",
+        "no-data",
+        "missed",
+        "missed"
       ]
     },
     {
@@ -861,6 +987,15 @@ const PARTIAL_DATA = {
       "missedDays": [
         "Sun",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "taken",
+        "missed",
+        "taken",
+        "no-data",
+        "taken",
+        "missed"
       ]
     },
     {
@@ -874,6 +1009,15 @@ const PARTIAL_DATA = {
         "Mon",
         "Wed",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "missed",
+        "missed",
+        "missed",
+        "no-data",
+        "missed",
+        "missed"
       ]
     },
     {
@@ -887,6 +1031,15 @@ const PARTIAL_DATA = {
         "Mon",
         "Wed",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "missed",
+        "missed",
+        "missed",
+        "no-data",
+        "missed",
+        "missed"
       ]
     },
     {
@@ -900,6 +1053,15 @@ const PARTIAL_DATA = {
         "Mon",
         "Wed",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "missed",
+        "missed",
+        "missed",
+        "no-data",
+        "missed",
+        "missed"
       ]
     },
     {
@@ -912,6 +1074,15 @@ const PARTIAL_DATA = {
         "Sun",
         "Mon",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "missed",
+        "missed",
+        "missed",
+        "no-data",
+        "taken",
+        "missed"
       ]
     },
     {
@@ -925,6 +1096,15 @@ const PARTIAL_DATA = {
         "Mon",
         "Wed",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "missed",
+        "missed",
+        "missed",
+        "no-data",
+        "missed",
+        "missed"
       ]
     },
     {
@@ -935,13 +1115,22 @@ const PARTIAL_DATA = {
       "missedDays": [
         "Sun",
         "Thu"
+      ],
+      "dayStatus": [
+        "no-data",
+        "taken",
+        "missed",
+        "taken",
+        "no-data",
+        "taken",
+        "missed"
       ]
     }
   ],
   "window": "Apr 24 \u2014 Apr 30, 2026",
   "window_start": "2026-04-24",
   "window_end": "2026-04-30",
-  "generated_at": "2026-05-01T11:35:29.375923",
+  "generated_at": "2026-05-01T15:00:32.276839",
   "weekly_metrics": {
     "hrv_avg": 39.68,
     "hrv_cv": 25.4,
