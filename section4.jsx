@@ -197,6 +197,7 @@ const Actions = ({ data }) => {
    ============================================================ */
 
 const Bloodwork = ({ data }) => {
+  const d = data.derived;
   return (
     <section id="bloodwork" className="page" style={{ paddingTop: 24, paddingBottom: 64 }}>
       <SectionMarker n={8} label="Bloodwork Tracker" />
