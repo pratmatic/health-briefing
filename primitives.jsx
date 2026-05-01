@@ -131,15 +131,23 @@ const SleepStack = ({ days, target = 8 }) => {
   );
 };
 
-// 4-week trend with current week highlight
+// 4-week trend with current week highlight. Null entries render as a low
+// muted bar so the strip stays plottable when a day's reading is missing.
 const TrendBars = ({ data, color = "var(--ink-2)", highlight = "var(--gold)" }) => {
+  const valid = data.filter((v) => v != null);
+  const max = valid.length ? Math.max(...valid) : 1;
+  const min = valid.length ? Math.min(...valid) * 0.9 : 0;
+  const range = max - min;
   return (
     <div className="flex items-end gap-1" style={{ height: 36 }}>
       {data.map((v, i) => {
-        const max = Math.max(...data);
-        const min = Math.min(...data) * 0.9;
-        const pct = ((v - min) / (max - min)) * 100;
         const isLast = i === data.length - 1;
+        if (v == null) {
+          return <div key={i} className="flex-1" style={{
+            height: "8%", background: "var(--line)", opacity: 0.35, minHeight: 2,
+          }} />;
+        }
+        const pct = range > 0 ? ((v - min) / range) * 100 : 50;
         return (
           <div key={i} className="flex-1" style={{
             height: `${Math.max(pct, 6)}%`,

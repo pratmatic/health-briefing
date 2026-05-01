@@ -215,6 +215,12 @@ const Pulse = ({ data }) => {
 
   const deepPct = avgSleep ? (d.deepAvg7d / avgSleep) * 100 : 0;
 
+  // Derived note inputs
+  const rhrDelta = (d.rhrAvg7d != null && d.rhrAvg30d != null) ? d.rhrAvg7d - d.rhrAvg30d : 0;
+  const shortNights = sleepDays.filter((x) => x.sleep.total < 5.5).length;
+  const deepShortNights = data.days.filter((x) => x.sleep.deep != null && x.sleep.deep < d.deepTarget).length;
+  const deepMeasuredNights = data.days.filter((x) => x.sleep.deep != null).length;
+
   return (
     <section id="pulse" className="page" style={{ paddingTop: 24, paddingBottom: 64 }}>
       <SectionMarker n={2} label="Biometric Pulse" />
@@ -263,7 +269,13 @@ const Pulse = ({ data }) => {
             unit="bpm"
             baseline={`30d ${d.rhrAvg30d.toFixed(1)}`}
             delta={<Delta value={d.rhrAvg7d - d.rhrAvg30d} suffix=" vs baseline" format={(v) => v.toFixed(1)} />}
-            note={<>Elevated <span className="serif-tab">3.6 bpm</span> over baseline. Sustained sympathetic load.</>}
+            note={
+              rhrDelta > 0.5
+                ? <>Elevated <span className="serif-tab">{rhrDelta.toFixed(1)} bpm</span> over baseline. Sustained sympathetic load.</>
+                : rhrDelta < -0.5
+                  ? <>Suppressed <span className="serif-tab">{Math.abs(rhrDelta).toFixed(1)} bpm</span> below baseline. Parasympathetic recovery.</>
+                  : <>RHR within <span className="serif-tab">{Math.abs(rhrDelta).toFixed(1)} bpm</span> of baseline. Stable autonomic state.</>
+            }
             chart={<Sparkline data={rhrSpark} color="var(--amber)" height={36} baseline={d.rhrAvg30d} />}
           />
           <MetricRow
@@ -279,31 +291,49 @@ const Pulse = ({ data }) => {
             eyebrow="Sleep · total vs needed"
             value={avgSleep == null ? "—" : fmtH(avgSleep)}
             unit="/ night"
-            baseline={`30d 7h 6m`}
+            baseline={`30d ${fmtH(d.sleepAvg30d)}`}
             delta={
               avgSleep != null && avgNeeded != null
                 ? <span className="mono tnum" style={{ color: "var(--red)", fontSize: 11 }}>▼ {fmtH(avgNeeded - avgSleep)} short of need</span>
                 : <span className="mono tnum" style={{ color: "var(--ink-4)", fontSize: 11 }}>—</span>
             }
-            note={<>Cumulative debt <span className="serif-tab">{fmtH(d.sleepDebtCum)}</span>. Two nights below 5h 30m.</>}
+            note={
+              <>Cumulative debt <span className="serif-tab">{fmtH(d.sleepDebtCum)}</span>.
+                {shortNights > 0 ? <> {shortNights} night{shortNights === 1 ? "" : "s"} below 5h 30m.</> : null}
+              </>
+            }
             chart={<SleepStack days={data.days} />}
           />
           <MetricRow
             eyebrow="Deep Sleep · avg / target"
             value={fmtH(d.deepAvg7d)}
             unit={`/ ${fmtH(d.deepTarget)} target`}
-            baseline={`30d 1h 20m`}
+            baseline={`30d ${fmtH(d.deepAvg30d)}`}
             delta={<span className="mono tnum" style={{ color: "var(--amber)", fontSize: 11 }}>{deepPct.toFixed(0)}% of total</span>}
-            note={<>Below target on <span className="serif-tab">5 / 7</span> nights. GH release likely blunted.</>}
+            note={
+              deepMeasuredNights > 0
+                ? <>Below target on <span className="serif-tab">{deepShortNights} / {deepMeasuredNights}</span> night{deepMeasuredNights === 1 ? "" : "s"}. {deepShortNights / deepMeasuredNights >= 0.5 ? "GH release likely blunted." : "Restorative depth largely intact."}</>
+                : <>Deep-sleep readings unavailable this week.</>
+            }
             chart={<TrendBars data={data.days.map((x) => x.sleep.deep)} color="var(--ink-3)" highlight="var(--ink)" />}
           />
           <MetricRow
             eyebrow="Strain Load · weekly total"
             value={d.totalStrain.toFixed(1)}
             unit={`· ${d.padelSessions} sessions`}
-            baseline={`30d wk avg 58.0`}
-            delta={<span className="mono tnum" style={{ color: "var(--red)", fontSize: 11 }}>▲ ratio {d.strainRecRatio} (target ≤ 1.0)</span>}
-            note={<>Strain : Recovery imbalance. Training capacity exceeded.</>}
+            baseline={d.strainRecRatio ? `ratio ${d.strainRecRatio.toFixed(2)} · target ≤ 1.0` : `target ≤ 1.0`}
+            delta={
+              d.strainRecRatio > 1.0
+                ? <span className="mono tnum" style={{ color: "var(--red)", fontSize: 11 }}>▲ ratio {d.strainRecRatio.toFixed(2)} (over budget)</span>
+                : <span className="mono tnum" style={{ color: "var(--green)", fontSize: 11 }}>● ratio {d.strainRecRatio.toFixed(2)} (within budget)</span>
+            }
+            note={
+              d.strainRecRatio > 1.3
+                ? <>Strain : Recovery imbalance. Training capacity exceeded.</>
+                : d.strainRecRatio > 1.0
+                  ? <>Slight strain : recovery overhang. Watch for cumulative load next week.</>
+                  : <>Strain absorbed cleanly. Capacity available for added load.</>
+            }
             chart={
               <div className="flex items-end gap-1" style={{ height: 36 }}>
                 {data.days.map((x, i) => {
